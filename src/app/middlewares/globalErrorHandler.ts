@@ -1,22 +1,24 @@
-import { NextFunction, Request, Response } from 'express'
-import { Error } from 'mongoose'
+import { ErrorRequestHandler } from 'express'
 import config from '../../config'
 import ApiError from '../../error/ApiError'
 import handleValidationError from '../../error/handleValidationError'
 import { IGenericErrorMessage } from '../../interfaces/error'
+import { ZodError } from 'zod'
+import handleZodError from '../../error/handleZodError'
 
-const globalErrorHandler = (
-  error: Error.ValidationError,
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
   let statusCode = 500
   let message = `Something went wrong`
   let errorMessage: IGenericErrorMessage[] = []
 
   if (error?.name === 'ValidationError') {
     const simplifiedError = handleValidationError(error)
+    statusCode = simplifiedError.statusCode
+    message = simplifiedError.message
+    errorMessage = simplifiedError.errorMessage
+  }
+  else if (error instanceof ZodError) {
+    const simplifiedError = handleZodError(error)
     statusCode = simplifiedError.statusCode
     message = simplifiedError.message
     errorMessage = simplifiedError.errorMessage
