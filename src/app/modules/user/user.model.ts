@@ -16,6 +16,7 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     role: {
       type: String,
+      required:true,
       enum: role,
     },
     name: {
