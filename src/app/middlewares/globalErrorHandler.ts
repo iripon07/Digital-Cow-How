@@ -7,6 +7,7 @@ import { ZodError } from 'zod'
 import handleZodError from '../../error/handleZodError'
 
 const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
+  console.log(`Global error handler`, error);
   let statusCode = 500
   let message = `Something went wrong`
   let errorMessage: IGenericErrorMessage[] = []
