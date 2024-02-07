@@ -1,42 +1,42 @@
-import { Server } from 'http'
-import mongoose from 'mongoose'
-import app from './app'
-import config from './config'
+import { Server } from 'http';
+import mongoose from 'mongoose';
+import app from './app';
+import config from './config';
 
 process.on('uncaughtException', error => {
-  console.log('Uncaught exception is detected', error)
-  process.exit(1)
-})
+  console.log('Uncaught exception is detected', error);
+  process.exit(1);
+});
 
-let server: Server
+let server: Server;
 
 async function main() {
   try {
-    await mongoose.connect(config.database_url as string)
-    console.log(`🍔 Database is connected successfully!`)
+    await mongoose.connect(config.database_url as string);
+    console.log(`🍔 Database is connected successfully!`);
     server = app.listen(config.port, () => {
-      console.log(`Application listening on port ${config.port}`)
-    })
+      console.log(`Application listening on port ${config.port}`);
+    });
   } catch (error) {
-    console.log(`Failed to connect database`, error)
+    console.log(`Failed to connect database`, error);
   }
 
   process.on('unhandledRejection', error => {
     if (server) {
       server.close(() => {
-        console.log(error)
-        process.exit(1)
-      })
+        console.log(error);
+        process.exit(1);
+      });
     } else {
-      process.exit(1)
+      process.exit(1);
     }
-  })
+  });
 }
 
-main()
+main();
 
 process.on('SIGTERM', () => {
   if (server) {
-    server.close()
+    server.close();
   }
-})
+});

@@ -1,6 +1,6 @@
-import { Schema, model } from 'mongoose'
-import { role } from './user.constant'
-import { IUser, UserModel } from './user.interface'
+import { Schema, model } from 'mongoose';
+import { role } from './user.constant';
+import { IUser, UserModel } from './user.interface';
 
 const userSchema = new Schema<IUser, UserModel>(
   {
@@ -16,7 +16,7 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     role: {
       type: String,
-      required:true,
+      required: true,
       enum: role,
     },
     name: {
@@ -52,6 +52,6 @@ const userSchema = new Schema<IUser, UserModel>(
   {
     timestamps: true,
   },
-)
+);
 
-export const User = model<IUser, UserModel>('User', userSchema)
+export const User = model<IUser, UserModel>('User', userSchema);
