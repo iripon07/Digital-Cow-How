@@ -1,9 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../Shared/catchAsync';
-import pick from '../../../Shared/pick';
 import sendResponse from '../../../Shared/sendResponse';
-import { paginationFields } from '../../../constant/pagination';
 import { UserServices } from './user.service';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
@@ -19,27 +17,25 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
-  const paginationOptions = pick(req.query, paginationFields);
-  const result = await UserServices.getAllUsers(paginationOptions);
+  const result = await UserServices.getAllUsers();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: `Users retrieved successfully`,
-    meta: result?.meta,
-    data: result?.data,
+    data: result,
   });
 });
 
-// const getSingleUser = catchAsync(async (req: Request, res: Response) => {
-//   const d = req.params.id;
-//   const result = await UserServices.getSingleUser();
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: `User created successfully`,
-//     data: result,
-//   });
-// });
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await UserServices.getSingleUser(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `User retrieved successfully`,
+    data: result,
+  });
+});
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
   const user = req.body;
@@ -54,13 +50,13 @@ const updateUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const deleteUser = catchAsync(async (req: Request, res: Response) => {
-  const user = req.body;
-  const result = await UserServices.createUser(user);
+  const id = req.params.id;
+  const result = await UserServices.deleteUser(id);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: `User created successfully`,
+    message: `User deleted successfully`,
     data: result,
   });
 });
@@ -68,7 +64,7 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
 export const UserControllers = {
   createUser,
   getAllUsers,
-  // getSingleUser,
+  getSingleUser,
   updateUser,
   deleteUser,
 };
