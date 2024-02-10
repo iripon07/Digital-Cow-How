@@ -1,5 +1,9 @@
 import { Model, Types } from 'mongoose';
 
+export type ICowFilters = {
+  searchTerm?: string;
+};
+
 export type ILocation =
   | 'Dhaka'
   | 'Mymensingh'

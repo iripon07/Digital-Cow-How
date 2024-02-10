@@ -20,8 +20,9 @@ const createCow = async (req: Request, res: Response) => {
 };
 
 const getAllCows = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, ['searchTerm'])
   const paginationOptions = pick(req.query, paginationFields);
-  const result = await CowServices.getAllCows(paginationOptions);
+  const result = await CowServices.getAllCows(filters,paginationOptions);
   sendResponse<ICow[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
