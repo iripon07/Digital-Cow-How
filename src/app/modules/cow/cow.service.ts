@@ -56,12 +56,12 @@ const getAllCows = async (
   if (sortBy && sortOrder) {
     sortConditions[sortBy] = sortOrder;
   }
-
+const whereConditions = andConditions.length > 0 ? { $and: andConditions } : {};
   const result = await Cow.find({ $and: andConditions })
     .sort(sortConditions)
     .skip(skip)
     .limit(limit);
-  const total = await Cow.countDocuments();
+  const total = await Cow.countDocuments(whereConditions);
   return {
     meta: {
       page,
