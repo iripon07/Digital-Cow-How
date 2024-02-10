@@ -1,6 +1,6 @@
 import { SortOrder } from 'mongoose';
 
-type IPaginationOptions = {
+type IOptions = {
   page?: number;
   limit?: number;
   sortBy?: string;
@@ -15,7 +15,7 @@ type IOptionsResult = {
   sortOrder: SortOrder;
 };
 
-const calculatePagination = (options: IPaginationOptions): IOptionsResult => {
+const calculatePagination = (options: IOptions): IOptionsResult => {
   const page = Number(options?.page || 1);
   const limit = Number(options?.limit || 10);
   const skip = (page - 1) * limit;
@@ -31,4 +31,6 @@ const calculatePagination = (options: IPaginationOptions): IOptionsResult => {
   };
 };
 
-export default calculatePagination;
+export const paginationHelper = {
+  calculatePagination,
+};
