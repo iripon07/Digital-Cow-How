@@ -19,7 +19,7 @@ export type IBreed =
   | 'Nellore'
   | 'Brahman';
 
-export type ILabel = 'sale' | 'sold';
+export type ILabel = 'for sale' | 'sold';
 export type ICategory = 'Dairy' | 'Beef' | 'Dual Purpose';
 
 export type ICow = {

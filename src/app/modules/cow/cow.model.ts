@@ -33,7 +33,7 @@ const cowSchema = new Schema<ICow, CowModel>({
     type: String,
     required: true,
     enum: label,
-    default:'sale'
+    default:'for sale'
   },
   category: {
     type: String,

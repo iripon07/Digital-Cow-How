@@ -21,6 +21,6 @@ export const breeds: IBreed[] = [
   'Brahman',
 ];
 
-export const label:ILabel[] = ['sale', 'sold'];
+export const label:ILabel[] = ['for sale', 'sold'];
 
 export const categories:ICategory[] = ['Dairy', 'Beef', 'Dual Purpose'];
