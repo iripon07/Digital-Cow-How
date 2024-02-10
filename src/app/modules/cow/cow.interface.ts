@@ -2,6 +2,8 @@ import { Model, Types } from 'mongoose';
 
 export type ICowFilters = {
   searchTerm?: string;
+  minPrice?:number,
+  maxPrice?:number
 };
 
 export type ILocation =

@@ -5,7 +5,7 @@ import { paginationHelper } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
 import { User } from '../user/user.model';
-import { cowSearchableFields } from './cow.constant';
+import { cowFilterableFields } from './cow.constant';
 import { ICow, ICowFilters } from './cow.interface';
 import { Cow } from './cow.model';
 
@@ -25,15 +25,27 @@ const getAllCows = async (
   filters: ICowFilters,
   paginationOptions: IPaginationOptions,
 ): Promise<IGenericResponse<ICow[] | null>> => {
-  const { searchTerm } = filters;
+  const { searchTerm, minPrice=0, maxPrice=Infinity, ...filterData } = filters;
   const andConditions = [];
   if (searchTerm) {
     andConditions.push({
-      $or: cowSearchableFields.map(field => ({
+      $or: cowFilterableFields.map(field => ({
         [field]: {
           $regex: searchTerm,
           $options: 'i',
         },
+      })),
+    });
+  }
+
+  andConditions.push({
+    $and: [{ price: { $gte: minPrice } }, { price: { $lte: maxPrice } }],
+  });
+
+  if (Object.keys(filterData).length) {
+    andConditions.push({
+      $and: Object.entries(filterData).map(([field, value]) => ({
+        [field]: value,
       })),
     });
   }

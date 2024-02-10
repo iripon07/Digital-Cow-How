@@ -21,8 +21,15 @@ export const breeds: IBreed[] = [
   'Brahman',
 ];
 
-export const label:ILabel[] = ['for sale', 'sold'];
+export const label: ILabel[] = ['for sale', 'sold'];
 
-export const categories:ICategory[] = ['Dairy', 'Beef', 'Dual Purpose'];
+export const categories: ICategory[] = ['Dairy', 'Beef', 'Dual Purpose'];
 
-export const cowSearchableFields = ['location', 'breed', 'category'];
+export const cowFilterableFields = [
+  'searchTerm',
+  'location',
+  'minPrice',
+  'maxPrice',
+  'breed',
+  'category',
+];

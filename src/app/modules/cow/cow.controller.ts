@@ -6,6 +6,7 @@ import sendResponse from '../../../Shared/sendResponse';
 import { paginationFields } from '../../../constant/pagination';
 import { CowServices } from './cow.service';
 import { ICow } from './cow.interface';
+import { cowFilterableFields } from './cow.constant';
 
 const createCow = async (req: Request, res: Response) => {
   const { seller } = req.body;
@@ -20,7 +21,7 @@ const createCow = async (req: Request, res: Response) => {
 };
 
 const getAllCows = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, ['searchTerm'])
+  const filters = pick(req.query, cowFilterableFields)
   const paginationOptions = pick(req.query, paginationFields);
   const result = await CowServices.getAllCows(filters,paginationOptions);
   sendResponse<ICow[]>(res, {
