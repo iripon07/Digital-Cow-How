@@ -73,11 +73,14 @@ const createOrder = async (
       path: 'buyer',
       model: 'User',
     });
-console.log(order);
+  console.log(order);
   return order;
 };
 
-const getOrders = async () => {};
+const getOrders = async (): Promise<IOrder[] | null> => {
+  const result = await Order.find();
+  return result;
+};
 
 const getSingleOrder = async () => {};
 

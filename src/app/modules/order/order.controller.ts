@@ -1,13 +1,11 @@
-import { Request, Response } from "express";
-import catchAsync from "../../../Shared/catchAsync";
-import { OrderServices } from "./order.service";
-import sendResponse from "../../../Shared/sendResponse";
-import httpStatus from "http-status";
+import { Request, Response } from 'express';
+import httpStatus from 'http-status';
+import catchAsync from '../../../Shared/catchAsync';
+import sendResponse from '../../../Shared/sendResponse';
+import { OrderServices } from './order.service';
 
-
-const createOrder = catchAsync(async (req:Request, res:Response) => {
- 
-  const {cow, buyer} = req.body
+const createOrder = catchAsync(async (req: Request, res: Response) => {
+  const { cow, buyer } = req.body;
   const result = await OrderServices.createOrder(cow, buyer);
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -17,7 +15,15 @@ const createOrder = catchAsync(async (req:Request, res:Response) => {
   });
 });
 
-const getOrders = async () => {};
+const getOrders = catchAsync(async (req: Request, res: Response) => {
+  const result = await OrderServices.getOrders();
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `Orders retrieved successfully`,
+    data: result,
+  });
+});
 
 const getSingleOrder = async () => {};
 
