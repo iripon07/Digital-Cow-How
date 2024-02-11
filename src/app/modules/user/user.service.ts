@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import ApiError from '../../../error/ApiError';
 import { IUser } from './user.interface';
 import { User } from './user.model';
 
@@ -9,29 +11,6 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   return result;
 };
 
-// const getAllUsers = async (
-//   paginationOptions: IPaginationOptions,
-// ): Promise<IGenericResponse<IUser[]>> => {
-//   const {page, limit, skip, sortBy, sortOrder} = calculatePagination(paginationOptions)
-
-//   const sortConditions:{[key: string]:number}={}
-//   if(sortBy && sortOrder){
-//     sortConditions[sortBy]=sortOrder
-//   }
-
-//   const result = await User.find().sort(sortConditions).skip(skip).limit(limit);
-//   const total = await User.countDocuments();
-
-//   return {
-//     meta: {
-//       page,
-//       limit,
-//       total,
-//     },
-//     data: result,
-//   };
-// }
-
 const getAllUsers = async (): Promise<IUser[] | null> => {
   const result = await User.find();
   return result;
@@ -42,7 +21,12 @@ const getSingleUser = async (id: string): Promise<IUser | null> => {
   return result;
 };
 
-const updateUser = async (user: IUser): Promise<IUser | null> => {
+const updateUser = async (id:string, updatedData: Partial<IUser>): Promise<IUser | null> => {
+  const isExist = await User.findOne({_id:id})
+  if(!isExist){
+    throw new ApiError(httpStatus.NOT_FOUND, `Invalid id, user doesn't exits`)
+  }
+  console.log(updatedData);
   const result = await User.create(user);
   if (!user) {
     throw new Error(`Failed to create user`);

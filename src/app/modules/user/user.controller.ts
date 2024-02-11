@@ -7,7 +7,6 @@ import { UserServices } from './user.service';
 const createUser = catchAsync(async (req: Request, res: Response) => {
   const user = req.body;
   const result = await UserServices.createUser(user);
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -38,8 +37,9 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const user = req.body;
-  const result = await UserServices.createUser(user);
+  const id = req.query.id;
+  const updatedData = req.body;
+  const result = await UserServices.updateUser(id, updatedData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
