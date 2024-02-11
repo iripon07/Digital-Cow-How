@@ -6,10 +6,12 @@ const orderSchema = new Schema<IOrder, OrderModel>(
     cow: {
       type: Schema.Types.ObjectId,
       ref: 'Cow',
+      required:true
     },
     buyer: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      required:true
     },
   },
   {
