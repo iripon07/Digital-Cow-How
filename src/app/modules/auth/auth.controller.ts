@@ -4,8 +4,10 @@ import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
 import { AuthServices } from './auth.service';
 import { ILoginUserResponse } from './auth.interface';
+import config from '../../../config';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
+  console.log(req.cookies, 'cookie');
   const user = req.body;
   const result = await AuthServices.createUser(user);
   sendResponse(res, {
@@ -19,11 +21,20 @@ const createUser = catchAsync(async (req: Request, res: Response) => {
 const loginUser = catchAsync(async (req:Request, res:Response) => {
   const {...loginData} = req.body
   const result = await AuthServices.loginUser(loginData);
+  const {refreshToken, ...others} = result
+
+  //set refresh token into cookie
+const cookieOptions={
+  secure: config.env==='production',
+  httpOnly:true
+}
+  res.cookie('refreshToken', refreshToken, cookieOptions)
+
   sendResponse<ILoginUserResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
     message: `User login successfully`,
-    data: result,
+    data: others,
   });
 });
 
