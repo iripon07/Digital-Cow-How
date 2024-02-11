@@ -3,9 +3,9 @@ import bcrypt from 'bcrypt';
 import { Schema, model } from 'mongoose';
 import config from '../../../config';
 import { role } from './user.constant';
-import { IUser, UserModel } from './user.interface';
+import { IUser, IUserMethods, UserModel } from './user.interface';
 
-const userSchema = new Schema<IUser, UserModel>(
+const userSchema = new Schema<IUser, `Record<string, never>`, IUserMethods>(
   {
     phoneNumber: {
       type: String,
@@ -54,6 +54,19 @@ const userSchema = new Schema<IUser, UserModel>(
     timestamps: true,
   },
 );
+
+userSchema.methods.isUserExist = async function (
+  phoneNumber: string,
+): Promise<Partial<IUser | null>> {
+  return await User.findOne({ phoneNumber }, { phoneNumber: 1, password: 1 });
+};
+
+userSchema.methods.isPasswordMatched = async function (
+  givenPassword: string,
+  savedPassword: string,
+): Promise<boolean> {
+  return await bcrypt.compare(givenPassword, savedPassword);
+};
 
 userSchema.pre('save', async function (next) {
   const user = this;

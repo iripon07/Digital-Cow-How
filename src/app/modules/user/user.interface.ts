@@ -16,4 +16,13 @@ export type IUser = {
   income?: number;
 };
 
-export type UserModel = Model<IUser, Record<string, unknown>>;
+export type IUserMethods = {
+  isUserExist(phoneNumber: string): Promise<Partial<IUser |null>>;
+  isPasswordMatched(
+    givenPassword: string,
+    savedPassword: string,
+  ): Promise<boolean>;
+  fullName(): string;
+};
+
+export type UserModel = Model<IUser, Record<string, unknown>, IUserMethods>;
