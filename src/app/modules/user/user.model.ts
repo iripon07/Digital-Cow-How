@@ -12,7 +12,7 @@ const userSchema = new Schema<IUser, UserModel>(
     password: {
       type: String,
       required: true,
-      select: 0,
+      select: false,
     },
     role: {
       type: String,
@@ -42,11 +42,9 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     budget: {
       type: Number,
-      required: true,
     },
     income: {
       type: Number,
-      required: true,
     },
   },
   {

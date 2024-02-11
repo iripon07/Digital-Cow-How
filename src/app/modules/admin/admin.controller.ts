@@ -5,12 +5,12 @@ import sendResponse from '../../../Shared/sendResponse';
 import { AdminServices } from './admin.service';
 
 const createAdmin = catchAsync(async (req: Request, res: Response) => {
-  const user = req.body;
-  const result = await AdminServices.createAdmin(user);
+  const admin = req.body;
+  const result = await AdminServices.createAdmin(admin);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: `User created successfully`,
+    message: `Admin created successfully`,
     data: result,
   });
 });
