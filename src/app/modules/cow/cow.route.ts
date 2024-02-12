@@ -12,13 +12,14 @@ router.post(
   validateRequest(CowValidations.createCowZodSchema),
   CowControllers.createCow,
 );
-router.get('/', CowControllers.getAllCows);
-router.get('/:id', CowControllers.getSingleCow);
+router.get('/', auth(ENUM_USER_ROLE.SELLER, ENUM_USER_ROLE.BUYER, ENUM_USER_ROLE.ADMIN), CowControllers.getAllCows);
+router.get('/:id', auth(ENUM_USER_ROLE.SELLER, ENUM_USER_ROLE.BUYER, ENUM_USER_ROLE.ADMIN), CowControllers.getSingleCow);
 router.patch(
   '/:id',
+  auth(ENUM_USER_ROLE.SELLER),
   validateRequest(CowValidations.updateCowZodSchema),
   CowControllers.updateCow,
 );
-router.delete('/:id', CowControllers.deleteCow);
+router.delete('/:id', auth(ENUM_USER_ROLE.SELLER), CowControllers.deleteCow);
 
 export const CowRoutes = router;
