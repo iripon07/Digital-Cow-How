@@ -2,11 +2,13 @@ import express from 'express';
 import validateRequest from '../../middlewares/validateRequest';
 import { CowControllers } from './cow.controller';
 import { CowValidations } from './cow.validation';
+import auth from '../../middlewares/auth';
+import { ENUM_USER_ROLE } from '../../../enums/user';
 
 const router = express.Router();
 
 router.post(
-  '/',
+  '/',auth(ENUM_USER_ROLE.SELLER),
   validateRequest(CowValidations.createCowZodSchema),
   CowControllers.createCow,
 );
