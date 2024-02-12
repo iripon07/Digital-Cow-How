@@ -1,11 +1,15 @@
 import httpStatus from 'http-status';
-import jwt,{ Secret } from 'jsonwebtoken';
+import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../error/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelper';
 import { IUser } from '../user/user.interface';
 import { User } from '../user/user.model';
-import { ILoginUser, ILoginUserResponse } from './auth.interface';
+import {
+  ILoginUser,
+  ILoginUserResponse,
+  IRefreshTokenResponse,
+} from './auth.interface';
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   const result = await User.create(user);
@@ -15,29 +19,28 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   return result;
 };
 
-const loginUser = async (payload: ILoginUser):Promise<ILoginUserResponse> => {
+const loginUser = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   const { phoneNumber, password } = payload;
-  const user = new User();
-  const isUserExist = await user.isUserExist(phoneNumber);
+  const isUserExist = await User.isUserExist(phoneNumber);
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, `User does not exist!`);
   }
   //Match password
   if (
     isUserExist?.password &&
-    !user.isPasswordMatched(password, isUserExist?.password)
+    !User.isPasswordMatched(password, isUserExist?.password)
   ) {
     throw new ApiError(httpStatus.UNAUTHORIZED, `Password does not match`);
   }
-  const { role } = isUserExist;
+  const { phoneNumber: UserPhoneNumber, role } = isUserExist;
   const accessToken = jwtHelpers.createToken(
-    { phoneNumber,role },
+    { phoneNumber: UserPhoneNumber, role },
     config.jwt.secret as Secret,
     config.jwt.expires_in as string,
   );
 
   const refreshToken = jwtHelpers.createToken(
-    { phoneNumber, role},
+    { phoneNumber: UserPhoneNumber, role },
     config.jwt.refresh_secret as Secret,
     config.jwt.refresh_expires_in as string,
   );
@@ -48,26 +51,40 @@ const loginUser = async (payload: ILoginUser):Promise<ILoginUserResponse> => {
   };
 };
 
-const refreshToken = async(token:string) =>{
-  let verifiedToken = null
+const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
+  let verifiedToken;
   try {
-    verifiedToken = jwt.verify(
+    verifiedToken = jwtHelpers.verifyToken(
       token,
       config.jwt.refresh_secret as Secret,
     );
   } catch (err) {
-    throw new ApiError(httpStatus.FORBIDDEN, `Invalid refresh toke`)
+    throw new ApiError(httpStatus.FORBIDDEN, `Invalid refresh toke`);
   }
+  console.log(verifiedToken, 'verified token');
 
   const { phoneNumber, role } = verifiedToken;
-  const isUserExist = await User.isUserExist(phoneNumber)
-  if(!isUserExist){
-    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist')
+  console.log(phoneNumber, 'Phone number');
+  console.log(role, 'Role');
+
+  const isUserExist = await User.isUserExist(phoneNumber);
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
 
-}
+  const nesAccessToken = jwtHelpers.createToken(
+    {
+      phoneNumber: isUserExist?.phoneNumber,
+      role: isUserExist?.role,
+    },
+    config.jwt.secret as Secret,
+    config.jwt.expires_in as string,
+  );
 
-
+  return {
+    accessToken: nesAccessToken,
+  };
+};
 
 export const AuthServices = {
   createUser,

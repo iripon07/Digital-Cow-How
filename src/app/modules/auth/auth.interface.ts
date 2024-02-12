@@ -1,9 +1,13 @@
 export type ILoginUser = {
-  phoneNumber:string
-  password:string
-}
+  phoneNumber: string;
+  password: string;
+};
 
-export type ILoginUserResponse={
-  accessToken:string
-  refreshToken?:string
-}
+export type ILoginUserResponse = {
+  accessToken: string;
+  refreshToken?: string;
+};
+
+export type IRefreshTokenResponse = {
+  accessToken: string;
+};
