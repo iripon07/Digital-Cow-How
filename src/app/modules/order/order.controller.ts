@@ -5,8 +5,9 @@ import sendResponse from '../../../Shared/sendResponse';
 import { OrderServices } from './order.service';
 
 const createOrder = catchAsync(async (req: Request, res: Response) => {
-  const { cow, buyer } = req.body;
-  const result = await OrderServices.createOrder(cow, buyer);
+  const { password, cow } = req.body;
+  const token = req?.headers?.authorization as string;
+  const result = await OrderServices.createOrder(token, password, cow);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -24,8 +25,17 @@ const getOrders = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
-
-const getSingleOrder = async () => {};
+const getSingleOrder = catchAsync(async (req: Request, res: Response) => {
+  const id = req.params.id;
+  const token = req?.headers?.authorization as string;
+  const result = await OrderServices.getSingleOrder(id, token);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Order retrieved successfully',
+    data: result,
+  });
+});
 
 export const OrderControllers = {
   createOrder,

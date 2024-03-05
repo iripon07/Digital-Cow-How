@@ -57,19 +57,18 @@ const userSchema = new Schema<IUser, UserModel>(
 
 userSchema.statics.isUserExist = async function (
   phoneNumber: string,
-): Promise<Pick<IUser, 'phoneNumber' | 'password' | 'role'>> {
-  const user = await User.findOne(
+): Promise<Pick<IUser, 'phoneNumber' | 'password' | 'role'> | null> {
+  return await User.findOne(
     { phoneNumber },
     { phoneNumber: 1, password: 1, role: 1 },
   );
-  return user as Pick<IUser, 'phoneNumber' | 'password' | 'role'>;
 };
 
-userSchema.statics.isPasswordMatched = async function (
+userSchema.statics.isPasswordMatch = async function (
   givenPassword: string,
-  savedPassword: string,
+  savePassword: string,
 ): Promise<boolean> {
-  return await bcrypt.compare(givenPassword, savedPassword);
+  return await bcrypt.compare(givenPassword, savePassword);
 };
 
 userSchema.pre('save', async function (next) {
