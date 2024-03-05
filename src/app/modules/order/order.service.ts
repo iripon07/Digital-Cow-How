@@ -60,7 +60,7 @@ const user = await User.findById(isUserExist.id);
     await User.findByIdAndUpdate(
       { _id: isUserExist.id },
       {
-        $inc: { budget: -isCowExist.price as number },
+        $inc: { budget: isCowExist.price}
       },
       { session },
     );

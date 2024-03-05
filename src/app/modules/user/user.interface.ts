@@ -7,6 +7,7 @@ export type UserName = {
 };
 
 export type IUser = {
+  id:string
   phoneNumber: string;
   password: string;
   role: 'seller' | 'buyer' | 'admin';
