@@ -1,10 +1,10 @@
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
-import { UserServices } from './user.service';
 import { IUser } from './user.interface';
-import bcrypt from 'bcrypt';
+import { UserServices } from './user.service';
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.getAllUsers();
@@ -28,7 +28,7 @@ const getSingleUser = catchAsync(async (req: Request, res: Response) => {
 });
 
 const updateUser = catchAsync(async (req: Request, res: Response) => {
-  const id = req.query.id;
+  const id = req.query.id as string;
   const updatedData = req.body;
   const result = await UserServices.updateUser(id, updatedData);
 
@@ -67,8 +67,8 @@ const updateMyProfile = catchAsync(async (req: Request, res: Response) => {
   const token = req?.headers?.authorization as string;
   const user = req.body;
 
-  if(user.password){
-    user.password = await bcrypt.hash(user.password, 10)
+  if (user.password) {
+    user.password = await bcrypt.hash(user.password, 10);
   }
   const result = await UserServices.updateMyProfile(token, user);
   sendResponse<IUser>(res, {

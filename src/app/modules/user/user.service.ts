@@ -18,17 +18,22 @@ const getSingleUser = async (id: string): Promise<IUser | null> => {
 
 const updateUser = async (
   id: string,
-  updatedData: Partial<IUser>,
+  payload: Partial<IUser>,
 ): Promise<IUser | null> => {
   const isExist = await User.findOne({ _id: id });
   if (!isExist) {
     throw new ApiError(httpStatus.NOT_FOUND, `Invalid id, user doesn't exits`);
   }
-  console.log(updatedData);
-  const result = await User.create(user);
-  if (!user) {
-    throw new Error(`Failed to create user`);
+  const isNumberExist = await User.findOne({
+    phoneNumber: payload?.phoneNumber,
+  });
+  if (isNumberExist) {
+    throw new ApiError(httpStatus.CONFLICT, 'This number already used');
   }
+  const result = await User.findOneAndUpdate({ _id: id }, payload, {
+    new: true,
+  });
+
   return result;
 };
 
