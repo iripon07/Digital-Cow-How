@@ -2,6 +2,8 @@ import express from 'express';
 import { ENUM_USER_ROLE } from '../../../enums/user';
 import auth from '../../middlewares/auth';
 import { UserControllers } from './user.controller';
+import { UserValidation } from './user.validation';
+import validateRequest from '../../middlewares/validateRequest';
 const router = express.Router();
 
 //Get Profile by Admin, Buyer, and Seller
@@ -9,6 +11,13 @@ router.get(
   '/my-profile',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.BUYER, ENUM_USER_ROLE.SELLER),
   UserControllers.myProfile,
+);
+
+//Update Profile by Admin, Buyer, and Seller
+router.patch(
+  '/my-profile',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.BUYER, ENUM_USER_ROLE.SELLER),
+  validateRequest(UserValidation.updateUserZodSchema), UserControllers.updateMyProfile
 );
 
 //Get All Users by Admin
