@@ -1,4 +1,5 @@
 import { Model, Types } from 'mongoose';
+import { IUser } from '../user/user.interface';
 
 export type ICowFilters = {
   searchTerm?: string;
@@ -37,7 +38,7 @@ export type ICow = {
   weight: number;
   label: ILabel;
   category: ICategory;
-  seller: 'IUser' | Types.ObjectId;
+  seller: IUser & Types.ObjectId;
 };
 
 export type CowModel = Model<ICow, Record<string, unknown>>;
