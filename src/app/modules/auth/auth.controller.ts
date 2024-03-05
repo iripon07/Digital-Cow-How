@@ -3,7 +3,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
 import config from '../../../config';
-import { ILoginUserResponse } from './auth.interface';
+import { ILoginUserResponse, IRefreshTokenResponse } from './auth.interface';
 import { AuthServices } from './auth.service';
 
 const createUser = catchAsync(async (req: Request, res: Response) => {
@@ -48,10 +48,10 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
   };
   res.cookie('refreshToken', refreshToken, cookieOptions);
 
-  sendResponse<ILoginUserResponse>(res, {
+  sendResponse<IRefreshTokenResponse>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: `User login successfully`,
+    message: `Token retrieved successfully`,
     data: result,
   });
 });

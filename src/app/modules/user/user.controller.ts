@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../../Shared/catchAsync';
 import sendResponse from '../../../Shared/sendResponse';
 import { UserServices } from './user.service';
+import { IUser } from './user.interface';
 
 const getAllUsers = catchAsync(async (req: Request, res: Response) => {
   const result = await UserServices.getAllUsers();
@@ -50,9 +51,22 @@ const deleteUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const myProfile = catchAsync(async (req: Request, res: Response) => {
+  const token = req?.headers?.authorization as string;
+  const result = await UserServices.myProfile(token);
+
+  sendResponse<IUser>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: `User's profile retrieved successfully`,
+    data: result,
+  });
+});
+
 export const UserControllers = {
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  myProfile,
 };

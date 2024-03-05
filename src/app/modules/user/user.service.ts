@@ -2,6 +2,9 @@ import httpStatus from 'http-status';
 import ApiError from '../../../error/ApiError';
 import { IUser } from './user.interface';
 import { User } from './user.model';
+import { jwtHelpers } from '../../../helpers/jwtHelper';
+import config from '../../../config';
+import { Secret } from 'jsonwebtoken';
 
 const getAllUsers = async (): Promise<IUser[] | null> => {
   const result = await User.find();
@@ -31,9 +34,20 @@ const deleteUser = async (id:string):Promise<IUser|null> => {
   return result;
 };
 
+
+const myProfile = async (token: string): Promise<IUser | null> => {
+  const userInfo = jwtHelpers.verifyToken(token, config.jwt.secret as Secret)
+  const result = await User.findOne({ phoneNumber: userInfo?.phoneNumber });
+  if(!result){
+    throw new ApiError(httpStatus.CONFLICT, 'Your profile does not exist!')
+  }
+  return result;
+};
+
 export const UserServices = {
   getAllUsers,
   getSingleUser,
   updateUser,
   deleteUser,
+  myProfile,
 };

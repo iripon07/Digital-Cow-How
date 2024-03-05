@@ -61,13 +61,8 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
   } catch (err) {
     throw new ApiError(httpStatus.FORBIDDEN, `Invalid refresh toke`);
   }
-  console.log(verifiedToken, 'verified token');
 
-  const { phoneNumber, role } = verifiedToken;
-  console.log(phoneNumber, 'Phone number');
-  console.log(role, 'Role');
-
-  const isUserExist = await User.isUserExist(phoneNumber);
+  const isUserExist = await User.isUserExist(verifiedToken.phoneNumber);
   if (!isUserExist) {
     throw new ApiError(httpStatus.NOT_FOUND, 'User does not exist');
   }
